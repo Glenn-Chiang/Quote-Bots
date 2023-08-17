@@ -8,9 +8,8 @@ BASE_URL = os.getenv('BASE_URL')
 
 def get_random_quote(author_name: str) -> str:
     response = requests.get(
-        f'${BASE_URL}/authors/${author_name}/randomquote')
-
-    quote_content = response.json().content
+        f'{BASE_URL}/authors/{author_name}/randomquote')
+    quote_content = response.json()['content']
     full_quote = f"{quote_content}"
     return full_quote
 
