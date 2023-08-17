@@ -17,11 +17,16 @@ async def main():
     for subscriber in subscribers:
         try:
             await bot.send_message(chat_id=subscriber["chatId"], text=quote)
-
+            print("Quote sent to subscribers")
         except Exception as err:
             error_message = f"Error sending quote to {subscriber['name']}"
             print(error_message, err)
             await message_admin(bot=bot, message_text=error_message)
+
+
+def lambda_handler(event, context):
+    asyncio.run(main())
+    return
 
 
 if __name__ == '__main__':
