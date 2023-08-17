@@ -4,7 +4,6 @@ from telegram import Bot
 from services import get_random_quote
 from dotenv import load_dotenv
 from services import get_subscribers
-from main import message_admin
 load_dotenv()
 
 author_name = 'Friedrich_Nietzsche'
@@ -21,7 +20,6 @@ async def main():
         except Exception as err:
             error_message = f"Error sending quote to {subscriber['name']}"
             print(error_message, err)
-            await message_admin(bot=bot, message_text=error_message)
 
 
 def lambda_handler(event, context):
