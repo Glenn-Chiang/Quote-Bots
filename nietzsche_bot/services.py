@@ -23,3 +23,7 @@ def get_subscribers(author_name: str) -> list:
     response = requests.get(f"{BASE_URL}/authors/{author_name}/subscribers")
     subscribers = response.json()
     return subscribers
+
+def remove_subscriber_from_author(author_name: str, username: str):
+    response = requests.delete(f"{BASE_URL}/authors/{author_name}/subscribers/{username}")
+    return response
