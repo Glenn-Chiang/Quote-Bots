@@ -19,16 +19,19 @@ async def subscribe(update: Update, context: CallbackContext):
 
     # Send post request to quotes API to register user as a subscriber
     try:
-        register_user(user=user, author_name=author_name)
+        res = register_user(user=user, author_name=author_name)
+        if res.status_code == 409:
+            raise requests.exceptions.HTTPError(res.json()['error'])
+
         await update.message.reply_text(text="Registration successful")
         await message_admin(
             bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
         print(f"{username} has subscribed to Nietzsche Bot!")
 
     except Exception as err:
-        print('Error registering user:', err)
+        print(f'Error registering {username}:', err, sep='\n')
 
-        await update.message.reply_text(text=f"Error subscribing to {author_name}")
+        await update.message.reply_text(text=f"Error subscribing to {author_name}: {err}")
 
         await message_admin(bot=context.bot,
                             message_text=f"Error registering {username}")
