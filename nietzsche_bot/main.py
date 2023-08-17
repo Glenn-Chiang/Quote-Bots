@@ -1,32 +1,65 @@
-import asyncio
-import os
+from telegram import Update, Bot
+from telegram.ext import Application, CallbackContext, CommandHandler
 import requests
-from telegram import Bot, Update
-from telegram.ext import Application, CommandHandler
+import os
 from dotenv import load_dotenv
+from services import get_random_quote, register_user
 
 load_dotenv('.env')
-BASE_URL = os.getenv('BASE_URL')
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+load_dotenv('../.env')
+BASE_URL = os.environ.get('BASE_URL')
+ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID')
+author_name = 'Friedrich_Nietzsche'
 
 
-async def main():
-    bot = Bot(token=os.getenv('BOT_TOKEN'))
+async def subscribe(update: Update, context: CallbackContext):
+    username = update.effective_user.username
+    chat_id = update.effective_chat.id
 
-    users = []
-    for user in users:
-        await send_quote(bot=bot, author_url_name='Friedrich_Nietzsche', chat_id=user.chat_id)
+    user = {"name": username, "chat_id": chat_id}
+
+    # Send post request to quotes API to register user as a subscriber
+    try:
+        register_user(user=user, author_name=author_name)
+        await update.message.reply_text(text="Registration successful")
+        await message_admin(
+            bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
+        print(f"{username} has subscribed to Nietzsche Bot!")
+
+    except Exception as err:
+        print('Error registering user:', err)
+
+        await update.message.reply_text(text=f"Error subscribing to {author_name}")
+
+        await message_admin(bot=context.bot,
+                            message_text=f"Error registering {username}")
 
 
-async def send_quote(bot: Bot, author_url_name: str, chat_id: str):
-    response = requests.get(
-        f'${BASE_URL}/authors/${author_url_name}/randomquote')
+async def send_random_quote(update: Update, context: CallbackContext):
+    try:
+        quote = get_random_quote(author_name=author_name)
+        await update.message.reply_text(text=quote)
 
-    quote_content: str = response.json().content
-    author_name: str = response.json().author.name
-    full_quote = f"{quote_content}\n\n- {author_name}"
+    except Exception as err:
+        print('Error getting quote:', err)
 
-    await bot.send_message(chat_id=chat_id, text=full_quote)
+        await update.message.reply_text(text="Error getting quote")
+
+        await message_admin(bot=context.bot, message_text=f"Error getting quote")
 
 
-if __name__ == 'main':
-    asyncio.run(main())
+async def message_admin(bot: Bot, message_text: str):
+    await bot.send_message(chat_id=ADMIN_CHAT_ID, text=message_text)
+
+
+def main():
+    app = Application.builder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler('start', subscribe))
+    app.add_handler(CommandHandler('random', send_random_quote))
+    print('Bot started. Polling for updates...')
+    app.run_polling()
+
+
+if __name__ == '__main__':
+    main()
