@@ -5,10 +5,8 @@ import os
 from dotenv import load_dotenv
 from services import get_random_quote, register_user
 
-load_dotenv('.env')
+load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
-load_dotenv('../.env')
-BASE_URL = os.environ.get('BASE_URL')
 ADMIN_CHAT_ID = os.environ.get('ADMIN_CHAT_ID')
 author_name = 'Friedrich_Nietzsche'
 
