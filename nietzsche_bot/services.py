@@ -17,3 +17,9 @@ def get_random_quote(author_name: str) -> str:
 def register_user(author_name: str, user: dict):
     requests.post(
         f"{BASE_URL}/authors/{author_name}/subscribers", json=user)
+
+
+def get_subscribers(author_name: str) -> list:
+    response = requests.get(f"{BASE_URL}/authors/{author_name}/subscribers")
+    subscribers = response.json()
+    return subscribers

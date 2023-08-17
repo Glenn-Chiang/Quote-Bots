@@ -3,23 +3,26 @@ import os
 from telegram import Bot
 from services import get_random_quote
 from dotenv import load_dotenv
+from services import get_subscribers
+from main import message_admin
+load_dotenv()
 
-load_dotenv('.env')
-BASE_URL = os.getenv('BASE_URL')
-
+author_name = 'Friedrich_Nietzsche'
 
 async def main():
     bot = Bot(token=os.getenv('BOT_TOKEN'))
+    subscribers = get_subscribers(author_name=author_name)
+    quote = get_random_quote(author_name=author_name)
 
-    users = []
-    for user in users:
-        await send_quote(bot=bot, author_url_name='Friedrich_Nietzsche', chat_id=user.chat_id)
+    for subscriber in subscribers:
+        try:
+            await bot.send_message(chat_id=subscriber["chatId"], text=quote)
+
+        except Exception as err:
+            error_message = f"Error sending quote to {subscriber['name']}"
+            print(error_message, err)
+            await message_admin(bot=bot, message_text=error_message)
 
 
-async def send_quote(bot: Bot, author_url_name: str, chat_id: str):
-    quote = get_random_quote(author_name=author_url_name)
-    await bot.send_message(chat_id=chat_id, text=quote)
-
-
-if __name__ == 'main':
+if __name__ == '__main__':
     asyncio.run(main())
