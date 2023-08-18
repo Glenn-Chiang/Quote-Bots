@@ -1,11 +1,12 @@
+import os
 from telegram import Update, Bot
 from telegram.ext import CallbackContext
 from services import get_random_quote, register_user, remove_subscriber_from_author
 from dotenv import load_dotenv
 load_dotenv()
-import os
 
-async def subscribe(update: Update, context: CallbackContext):
+
+async def subscribeHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
     username = update.effective_user.username
     chat_id = update.effective_chat.id
@@ -19,7 +20,7 @@ async def subscribe(update: Update, context: CallbackContext):
         bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
 
 
-async def send_random_quote(update: Update, context: CallbackContext):
+async def quoteHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
     try:
         quote = get_random_quote(author_name=author_name)
@@ -33,7 +34,7 @@ async def send_random_quote(update: Update, context: CallbackContext):
         await message_admin(bot=context.bot, message_text=f"Error getting quote")
 
 
-async def help(update: Update, context: CallbackContext):
+async def helpHandler(update: Update, context: CallbackContext):
     help_message = """
 /random  -  Get a random quote
 /unsubscribe  -  Stop receiving daily quotes
@@ -41,7 +42,7 @@ async def help(update: Update, context: CallbackContext):
     await update.message.reply_text(text=help_message)
 
 
-async def unsubscribe(update: Update, context: CallbackContext):
+async def unsubscribeHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
     username = update.effective_user.username
     res = remove_subscriber_from_author(
