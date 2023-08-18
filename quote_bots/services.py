@@ -29,7 +29,8 @@ def subscribe(author_name: str, user: dict):
 def get_subscribers(author_name: str) -> list:
     subscribers_collection: CollectionReference = db.collection(
         "authors").document(author_name).collection("subscribers")
-    subscribers = subscribers_collection.get()
+    subscriberDocs = subscribers_collection.stream()
+    subscribers = [doc.to_dict() for doc in subscriberDocs]
     return subscribers
 
 

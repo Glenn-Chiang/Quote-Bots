@@ -3,7 +3,7 @@ from telegram import Update, Bot
 from telegram.ext import CallbackContext
 from dotenv import load_dotenv
 load_dotenv()
-from quote_bots.services import get_random_quote, subscribe, unsubscribe
+from quote_bots.services import get_random_quote, subscribe, unsubscribe, get_subscribers
 
 
 async def subscribeHandler(update: Update, context: CallbackContext):
@@ -11,7 +11,7 @@ async def subscribeHandler(update: Update, context: CallbackContext):
     username = update.effective_user.username
     chat_id = str(update.effective_chat.id)
 
-    user = {"name": username, "chat_id": chat_id}
+    user = {"username": username, "chat_id": chat_id}
 
     subscribe(user=user, author_name=author_name)
 
@@ -41,6 +41,12 @@ async def helpHandler(update: Update, context: CallbackContext):
 """
     await update.message.reply_text(text=help_message)
 
+
+async def subscribersHandler(update: Update, context: CallbackContext):
+    author_name = context.bot_data["author_name"]
+    subscribers = get_subscribers(author_name=author_name)
+    formatted_subscribers = ('\n').join([subscriber['username'] for subscriber in subscribers])
+    await update.message.reply_text(text=formatted_subscribers)
 
 async def unsubscribeHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
