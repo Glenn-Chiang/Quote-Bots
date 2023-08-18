@@ -1,15 +1,10 @@
-import asyncio
-import os
 from telegram import Bot
 from services import get_random_quote
-from dotenv import load_dotenv
 from services import get_subscribers
-load_dotenv()
 
-author_name = 'Friedrich_Nietzsche'
 
-async def main():
-    bot = Bot(token=os.getenv('BOT_TOKEN'))
+async def send_quote(author_name: str, bot_token: str):
+    bot = Bot(token=bot_token)
     subscribers = get_subscribers(author_name=author_name)
     quote = get_random_quote(author_name=author_name)
 
@@ -22,10 +17,4 @@ async def main():
             print(error_message, err)
 
 
-def lambda_handler(event, context):
-    asyncio.run(main())
-    return
 
-
-if __name__ == '__main__':
-    asyncio.run(main())
