@@ -17,24 +17,12 @@ async def subscribe(update: Update, context: CallbackContext):
 
     user = {"name": username, "chat_id": chat_id}
 
-    # Send post request to quotes API to register user as a subscriber
-    try:
-        res = register_user(user=user, author_name=author_name)
-        if res.status_code == 409:
-            raise requests.exceptions.HTTPError(res.json()['error'])
+    register_user(user=user, author_name=author_name)
 
-        await update.message.reply_text(text="Subscribed! Type /help for a list of commands")
-        await message_admin(
-            bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
-        print(f"{username} has subscribed to Nietzsche Bot")
-
-    except Exception as err:
-        print(f'Error registering {username}:', err, sep='\n')
-
-        await update.message.reply_text(text=f"{err}")
-
-        await message_admin(bot=context.bot,
-                            message_text=f"Error registering {username}")
+    await update.message.reply_text(text="Subscribed! Type /help for a list of commands")
+    await message_admin(
+        bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
+    print(f"{username} has subscribed to Nietzsche Bot")
 
 
 async def send_random_quote(update: Update, context: CallbackContext):
@@ -60,7 +48,8 @@ async def help(update: Update, context: CallbackContext):
 
 async def unsubscribe(update: Update, context: CallbackContext):
     username = update.effective_user.username
-    res = remove_subscriber_from_author(username=username, author_name=author_name)
+    res = remove_subscriber_from_author(
+        username=username, author_name=author_name)
     await update.message.reply_text(text="Unsubscribed. To subscribe again, enter /start")
     await message_admin(bot=context.bot, message_text=f"{username} has unsubscribed")
 
