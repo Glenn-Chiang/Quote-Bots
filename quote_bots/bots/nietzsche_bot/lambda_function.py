@@ -1,5 +1,5 @@
 import asyncio
-from send_quote import send_quote
+from quote_bots.send_quote import send_quote
 import os
 from dotenv import load_dotenv
 load_dotenv()

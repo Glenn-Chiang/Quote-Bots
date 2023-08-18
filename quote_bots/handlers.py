@@ -1,9 +1,9 @@
 import os
 from telegram import Update, Bot
 from telegram.ext import CallbackContext
-from services import get_random_quote, subscribe, unsubscribe
 from dotenv import load_dotenv
 load_dotenv()
+from quote_bots.services import get_random_quote, subscribe, unsubscribe
 
 
 async def subscribeHandler(update: Update, context: CallbackContext):
