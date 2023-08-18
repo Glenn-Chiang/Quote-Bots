@@ -1,7 +1,7 @@
 import os
 from telegram import Update, Bot
 from telegram.ext import CallbackContext
-from services import get_random_quote, register_user, remove_subscriber_from_author
+from services import get_random_quote, subscribe, unsubscribe
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -13,7 +13,7 @@ async def subscribeHandler(update: Update, context: CallbackContext):
 
     user = {"name": username, "chat_id": chat_id}
 
-    register_user(user=user, author_name=author_name)
+    subscribe(user=user, author_name=author_name)
 
     await update.message.reply_text(text="Subscribed! Type /help for a list of commands")
     await message_admin(
@@ -45,8 +45,8 @@ async def helpHandler(update: Update, context: CallbackContext):
 async def unsubscribeHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
     username = update.effective_user.username
-    res = remove_subscriber_from_author(
-        username=username, author_name=author_name)
+    chat_id = str(update.effective_chat.id)
+    unsubscribe(author_name=author_name, chat_id=chat_id)
     await update.message.reply_text(text="Unsubscribed. To subscribe again, enter /start")
     await message_admin(bot=context.bot, message_text=f"{username} has unsubscribed")
 

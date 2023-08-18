@@ -10,5 +10,3 @@ class QuoteBot():
         self.app.add_handler(CommandHandler('quote', quoteHandler))
         self.app.add_handler(CommandHandler('unsubscribe', unsubscribeHandler))
         self.app.bot_data["author_name"] = author_name
-
-    
