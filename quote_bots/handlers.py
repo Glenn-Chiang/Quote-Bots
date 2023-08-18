@@ -9,7 +9,7 @@ from quote_bots.services import get_random_quote, subscribe, unsubscribe
 async def subscribeHandler(update: Update, context: CallbackContext):
     author_name = context.bot_data["author_name"]
     username = update.effective_user.username
-    chat_id = update.effective_chat.id
+    chat_id = str(update.effective_chat.id)
 
     user = {"name": username, "chat_id": chat_id}
 
