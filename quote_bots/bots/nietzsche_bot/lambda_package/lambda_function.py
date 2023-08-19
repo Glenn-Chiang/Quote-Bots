@@ -2,41 +2,46 @@ import os
 import asyncio
 from telegram import Bot
 import requests
-from firestore import db
+from dotenv import load_dotenv
+load_dotenv()
 
-BASE_URL = os.getenv('BASE_URL')
-BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 def lambda_handler(event, context):
-    asyncio.run(send_quote(author_name='Friedrich_Nietzsche',
-                bot_token=BOT_TOKEN))
+    asyncio.run(main())
     return
 
 
-async def send_quote(author_name: str, bot_token: str):
-    bot = Bot(token=bot_token)
+async def main():
+    author_name = 'Friedrich_Nietzsche'
+    bot = Bot(token=os.getenv('BOT_TOKEN'))
     subscribers = get_subscribers(author_name=author_name)
     quote = get_random_quote(author_name=author_name)
 
     for subscriber in subscribers:
         try:
-            await bot.send_message(chat_id=subscriber["chatId"], text=quote)
+            await bot.send_message(chat_id=subscriber["chat_id"], text=quote)
             print("Quote sent to subscribers")
         except Exception as err:
-            error_message = f"Error sending quote to {subscriber['name']}"
+            error_message = f"Error sending quote to {subscriber['username']}"
             print(error_message, err)
 
 
 def get_random_quote(author_name: str):
     response = requests.get(
-        f'{BASE_URL}/authors/{author_name}/randomquote')
+        f"{os.getenv('BASE_URL')}/authors/{author_name}/randomquote")
     quote_content = response.json()['content']
     full_quote = f"{quote_content}"
     return full_quote
 
 
 def get_subscribers(author_name: str) -> list:
-    subscribers_collection = db.collection(
-        "authors").document(author_name).collection("subscribers")
-    subscribers = subscribers_collection.get()
+    # subscribers_collection = db.collection(
+    #     "authors").document(author_name).collection("subscribers")
+    # subscriberDocs = subscribers_collection.stream()
+    # subscribers = [doc.to_dict() for doc in subscriberDocs]
+    subscribers = [{"username": "Glenn_Chiang", "chat_id": "5291406801"}]
     return subscribers
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
