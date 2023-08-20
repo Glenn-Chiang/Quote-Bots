@@ -1,6 +1,0 @@
-README.md
-setup.py
-Quote_Bots.egg-info/PKG-INFO
-Quote_Bots.egg-info/SOURCES.txt
-Quote_Bots.egg-info/dependency_links.txt
-Quote_Bots.egg-info/top_level.txt
