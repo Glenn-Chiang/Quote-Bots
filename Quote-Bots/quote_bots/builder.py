@@ -1,5 +1,5 @@
 from telegram.ext import Application, CommandHandler
-from handlers import subscribeHandler, helpHandler, quoteHandler, unsubscribeHandler, subscribersHandler
+from quote_bots.handlers import subscribeHandler, helpHandler, quoteHandler, unsubscribeHandler, subscribersHandler
 
 
 def build(bot_token: str, author_name: str, admin_chat_id: str):

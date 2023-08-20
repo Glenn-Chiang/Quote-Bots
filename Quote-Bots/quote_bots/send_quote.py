@@ -1,6 +1,5 @@
 from telegram import Bot
-from services import get_random_quote
-from services import get_subscribers
+from quote_bots.services import get_random_quote, get_subscribers
 
 
 async def send_quote(author_name: str, bot_token: str):

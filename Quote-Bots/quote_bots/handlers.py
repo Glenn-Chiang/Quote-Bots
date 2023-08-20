@@ -1,9 +1,7 @@
-from services import get_random_quote, subscribe, unsubscribe, get_subscribers
+from quote_bots.services import get_random_quote, subscribe, unsubscribe, get_subscribers
 import requests
 from telegram import Update, Bot
 from telegram.ext import CallbackContext
-from dotenv import load_dotenv
-load_dotenv()
 
 
 async def quoteHandler(update: Update, context: CallbackContext):
