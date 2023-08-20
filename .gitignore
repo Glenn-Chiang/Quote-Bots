@@ -1,0 +1,8 @@
+venv
+.env
+.vscode
+__pycache__
+*.zip
+credentials.json
+build
+*.egg-info/
