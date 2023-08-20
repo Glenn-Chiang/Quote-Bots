@@ -2,7 +2,8 @@ from telegram.ext import Application, CommandHandler
 from handlers import subscribeHandler, helpHandler, quoteHandler, unsubscribeHandler, subscribersHandler
 
 
-def build(app: Application, author_name: str):
+def build(bot_token: str, author_name: str):
+    app = Application.builder().token(bot_token).build()
     app.add_handler(CommandHandler('start', subscribeHandler))
     app.add_handler(CommandHandler('subscribers', subscribersHandler))
     app.add_handler(CommandHandler('help', helpHandler))
