@@ -1,9 +1,6 @@
 import requests
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-BASE_URL = os.getenv('BASE_URL')
+BASE_URL = 'https://quotes-api-cg5g.onrender.com'
 
 
 def get_random_quote(author_name: str):
@@ -16,7 +13,8 @@ def get_random_quote(author_name: str):
 
 
 def subscribe(author_name: str, user: dict):
-    response = requests.post(f'{BASE_URL}/authors/{author_name}/subscribers', json=user)
+    response = requests.post(
+        f'{BASE_URL}/authors/{author_name}/subscribers', json=user)
     response.raise_for_status()
 
 
@@ -25,6 +23,8 @@ def get_subscribers(author_name: str) -> list:
     response.raise_for_status()
     return response.json()
 
+
 def unsubscribe(author_name: str, chat_id: str):
-    response = requests.delete(f'{BASE_URL}/authors/{author_name}/subscribers/{chat_id}')
+    response = requests.delete(
+        f'{BASE_URL}/authors/{author_name}/subscribers/{chat_id}')
     response .raise_for_status()
