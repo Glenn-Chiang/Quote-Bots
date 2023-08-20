@@ -15,24 +15,14 @@ def get_random_quote(author_name: str):
 
 
 def subscribe(author_name: str, user: dict):
-    subscribers_collection: CollectionReference = db.collection(
-        "authors").document(author_name).collection("subscribers")
-    subscriber_doc: DocumentReference = subscribers_collection.document(
-        document_id=user["chat_id"])
-    subscriber_doc.set(document_data=user)
-    # If user is already subscribed, nothing will happen
+    response = requests.post(f'{BASE_URL}/authors/{author_name}/subscribers', json=user)
+    return response
 
 
 def get_subscribers(author_name: str) -> list:
-    subscribers_collection: CollectionReference = db.collection(
-        "authors").document(author_name).collection("subscribers")
-    subscriberDocs = subscribers_collection.stream()
-    subscribers = [doc.to_dict() for doc in subscriberDocs]
-    return subscribers
-
+    response = requests.get(f'{BASE_URL}/authors/{author_name}/subscribers')
+    return response.json()
 
 def unsubscribe(author_name: str, chat_id: str):
-    subscribers_collection: CollectionReference = db.collection(
-        "authors").document(author_name).collection("subscribers")
-    subscriber_doc: DocumentReference = subscribers_collection.document(document_id=chat_id)
-    subscriber_doc.delete()
+    response = requests.delete(f'{BASE_URL}/authors/{author_name}/subscribers/{chat_id}')
+    return response
