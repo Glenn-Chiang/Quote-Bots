@@ -1,5 +1,4 @@
 from services import get_random_quote, subscribe, unsubscribe, get_subscribers
-import os
 import requests
 from telegram import Update, Bot
 from telegram.ext import CallbackContext
@@ -49,8 +48,12 @@ async def subscribeHandler(update: Update, context: CallbackContext):
     try:
         subscribe(user=user, author_name=author_name)
         await update.message.reply_text(text="Subscribed! Type /help for a list of commands")
-        await message_admin(
-            bot=context.bot, message_text=f"{username} has subscribed to Nietzsche Bot!")
+
+        bot: Bot = context.bot
+        admin_chat_id = context.bot_data['admin_chat_id']
+        bot.send_message(chat_id=admin_chat_id,
+                         text=f"{username} has subscribed to Nietzsche Bot!")
+
     except requests.exceptions.HTTPError as error:
         await update.message.reply_text(error["error"])
 
@@ -63,10 +66,9 @@ async def unsubscribeHandler(update: Update, context: CallbackContext):
     try:
         unsubscribe(author_name=author_name, chat_id=chat_id)
         await update.message.reply_text(text="Unsubscribed. To subscribe again, enter /start")
-        await message_admin(bot=context.bot, message_text=f"{username} has unsubscribed")
+        bot: Bot = context.bot
+        admin_chat_id = context.bot_data['admin_chat_id']
+        await bot.send_message(chat_id=admin_chat_id, text=f"{username} has unsubscribed")
+
     except requests.exceptions.HTTPError as error:
         await update.message.reply_text(error["error"])
-
-
-async def message_admin(bot: Bot, message_text: str):
-    await bot.send_message(chat_id=os.getenv('ADMIN_CHAT_ID'), text=message_text)
