@@ -1,8 +1,6 @@
 import requests
 import os
 from dotenv import load_dotenv
-from google.cloud.firestore_v1.document import DocumentReference
-from google.cloud.firestore_v1.collection import CollectionReference
 
 load_dotenv()
 BASE_URL = os.getenv('BASE_URL')
