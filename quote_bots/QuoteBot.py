@@ -1,5 +1,5 @@
 from telegram.ext import Application, CommandHandler
-from quote_bots.handlers import subscribeHandler, helpHandler, quoteHandler, unsubscribeHandler, subscribersHandler
+from handlers import subscribeHandler, helpHandler, quoteHandler, unsubscribeHandler, subscribersHandler
 
 
 class QuoteBot():
