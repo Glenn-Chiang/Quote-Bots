@@ -8,12 +8,10 @@ async def send_quote(author_name: str, bot_token: str):
     quote = get_random_quote(author_name=author_name)
 
     for subscriber in subscribers:
-        try:
-            await bot.send_message(chat_id=subscriber["chatId"], text=quote)
-            print("Quote sent to subscribers")
-        except Exception as err:
-            error_message = f"Error sending quote to {subscriber['name']}"
-            print(error_message, err)
+        await bot.send_message(chat_id=subscriber["chatId"], text=quote)
+
+    print("Quote sent to subscribers")
+    
 
 
 
